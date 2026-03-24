@@ -10,6 +10,7 @@ $_SESSION["fechafin"] = $fechaFin;
 $_SESSION["idalmacen"] = $idalmacen;
 include_once("../../modelos/empleado.modelo.php");
 include_once("../../modelos/almacen.modelo.php");
+include_once("../../modelos/cuotaCompra.modelo.php");
 
 if ($idalmacen == 0) {
   $nombreVendedor = 'Todos';
@@ -34,6 +35,8 @@ if ($idalmacen == 0) {
       <th>Cancelado</th>
       <th>Usuario</th>
       <th>Costo Total</th>
+      <!-- <th>Saldo</th> -->
+      <th>Ver</th>
       <th>Borrar</th>
     </tr>
   </thead>
@@ -53,6 +56,9 @@ if ($idalmacen == 0) {
     $sumatodascompras = 0;
     $montoaunenInversion = 0;
     $sumaMontoaunenInversion = 0;
+    $sumaCuotaCompra = 0;
+    $saldoPorCancelar=0;
+    $objeCuotaCompra = new CuotaCompra();
     $obj = new Compra();
     if ($idalmacen == 0) {
       $resultado = $obj->ReporteComprasActivas($fechaIni, $fechaFin);
@@ -82,6 +88,15 @@ if ($idalmacen == 0) {
       /* $sub_costo=$fila->precio_compra_prod*$fila->cantidad_prod;   
                     $ganacia=$fila->subtotal_venta-$sub_costo;*/
       //$montoaunenInversion = ($fila->precio_unit_compra * $fila->stock_actual);
+      if ($fila->compra_credito == 1) {
+        $resultCuota = $objeCuotaCompra->sumatoriaDeCuotaDeCompra($fila->idcompra);
+        $filaCuota = mysqli_fetch_object($resultCuota);
+        $sumaCuotaCompra = $filaCuota->sumaCuotas;
+        $saldoPorCancelar1 = $fila->monto_compra - $sumaCuotaCompra;
+        $saldoPorCancelar = number_format((float)$saldoPorCancelar1, 2, '.', '');
+      }else{
+        $saldoPorCancelar =0;
+      }
     ?>
       <tr>
 
@@ -102,13 +117,14 @@ if ($idalmacen == 0) {
           <?php if ($fila->cancelado == 1): ?>
             <i class="fa fa-check-circle" style="color: green;"></i>
           <?php else: ?>
-            <i class="fa fa-circle" style="color: gray; cursor:pointer;" onclick="modalCuota(<?php echo $fila->idcompra; ?>,<?php echo $fila->monto_compra; ?>)" data-toggle="modal" data-target="#modalCuota"></i>
+            <button class="btn btn-warning btn-xs" style="cursor:pointer;" onclick="modalCuota(<?php echo $fila->idcompra; ?>,<?php echo $fila->monto_compra; ?>,<?php echo $saldoPorCancelar; ?>)" data-toggle="modal" data-target="#modalCuota">Por cancelar</button>
           <?php endif; ?>
         </td>
         <!-- <td><?php echo number_format((float)$montoaunenInversion, 2, '.', ''); ?></td> -->
         <td><?php echo $fila->Usuario; ?></td>
         <td><?php echo $fila->monto_compra; ?></td>
-
+        <!-- <td><?php echo $saldoPorCancelar; ?></td> -->
+        <td><button class="btn btn-info"><a target="_blank" href="detalle-compra?codcompra=<?php echo $fila->idcompra; ?>"><i class="fa fa-eye"></i></a> </button> </td>
 
         <td>
           <div class="btn-group">

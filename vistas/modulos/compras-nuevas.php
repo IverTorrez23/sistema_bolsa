@@ -6,6 +6,7 @@ include_once("modelos/categorias.modelo.php");
 include_once("modelos/clientes.modelo.php");
 include_once("modelos/compraProducto.modelo.php");
 include_once("modelos/proveedor.modelo.php");
+date_default_timezone_set('America/La_Paz');
 ?>
 <!-- Content Wrapper. Contains page content -->
 
@@ -123,6 +124,13 @@ include_once("modelos/proveedor.modelo.php");
     <div class="checkbox">
       <label>
         <input type="checkbox" name="checkCredit" id="checkCredit"> Compra a credito
+      </label>
+    </div>
+
+    <div class="">
+      <label>
+        Fecha Compra: 
+        <input type="date" class="form-control" name="fechaCompra" id="fechaCompra" value="<?php echo date('Y-m-d'); ?>">
       </label>
     </div>
     <!--<small>CODIGO:</small>  <input type="text" name="" id="miInput" value="" autofocus placeholder="CODIGO PRODUCTO">
@@ -599,6 +607,7 @@ include_once("modelos/proveedor.modelo.php");
       var textiduser = $("#textiduser").val();
       var texttipouser = $("#texttipouser").val();
       var cuotaCompra = $("#cuotaCompra").val();
+      var fechaCompra = $("#fechaCompra").val();
 
       var switchCredit = 0;
 
@@ -626,6 +635,7 @@ include_once("modelos/proveedor.modelo.php");
         formDataVenta.append('texttipouser', texttipouser);
         formDataVenta.append('switchCredit', switchCredit);
         formDataVenta.append('cuotaCompra', cuotaCompra);
+        formDataVenta.append('fechaCompra', fechaCompra);
         $.ajax({
           url: 'controladores/compraNueva.controlador.php',
           type: 'post',

@@ -41,7 +41,7 @@ function ctrlguardarVenta()
 	}
 
 	$objventa = new Venta();
-	$objventa->set_fechaventa($fechaHora);
+	$objventa->set_fechaventa($_POST['fechaVenta']);
 	$objventa->set_montoVenta($_POST['montoventatotal']);
 	$objventa->set_ventaFacturada($sw_facura);
 	$objventa->set_precioFacturaV(0);
@@ -53,7 +53,7 @@ function ctrlguardarVenta()
 	$objventa->set_estadoVenta("Activo");
 	$objventa->set_usuarioBaja(0);
 	$objventa->set_fechBaja('');
-
+    $objventa->set_fechaRegistro($fechaHora);
 	if ($objventa->guardarVenta()) {
 		/*preguntamos si hay cliente seleccionado*/
 		$resultultventa = $objventa->mostrarUltimaVenta();

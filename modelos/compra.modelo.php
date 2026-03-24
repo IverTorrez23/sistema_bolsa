@@ -15,6 +15,7 @@ class Compra extends Conexion
 	private $tipo_reg;
 	private $usuario_baja;
 	private $fecha_baja;
+	private $fecha_registro;
 
 	public function Compra()
 	{
@@ -32,6 +33,7 @@ class Compra extends Conexion
 		$this->tipo_reg = "";
 		$this->usuario_baja = 0;
 		$this->fecha_baja = 0;
+		$this->fecha_registro = "";
 	}
 
 	public function setid_compra($valor)
@@ -144,6 +146,14 @@ class Compra extends Conexion
 	{
 		return $this->fecha_baja;
 	}
+	public function set_fechaRegistro($valor)
+	{
+		$this->fecha_registro = $valor;
+	}
+	public function get_fechaRegistro()
+	{
+		return $this->fecha_registro;
+	}
 
 
 
@@ -160,7 +170,8 @@ class Compra extends Conexion
 			                        estado,
 			                        tipo_reg,
 			                        usuario_baja,
-			                        fecha_baja) 
+			                        fecha_baja,
+									fecha_registro) 
 		                      VALUES('$this->fecha_compra',
 		                      	     '$this->monto_compra',
 		                      	     '$this->compra_facturada',
@@ -172,7 +183,8 @@ class Compra extends Conexion
 		                      	     '$this->estado',
 		                      	     '$this->tipo_reg',
 		                      	     '$this->usuario_baja',
-		                      	     '$this->fecha_baja')";
+		                      	     '$this->fecha_baja',
+									 '$this->fecha_registro')";
 		if (parent::ejecutar($sql))
 			return true;
 		else
@@ -240,6 +252,17 @@ class Compra extends Conexion
 		        compra_facturada ='$this->compra_facturada',
 		        usuario_alta     ='$this->usuario_alta',
 		        id_proveedor     ='$this->id_proveedor'
+		        WHERE id_compra  = $idcompra";
+		if (parent::ejecutar($sql))
+			return true;
+		else
+			return false;
+	}
+	public function editarMontoCompra($idcompra)
+	{
+		$sql = "UPDATE tb_compra
+		    set monto_compra     ='$this->monto_compra',
+		        usuario_alta     ='$this->usuario_alta'
 		        WHERE id_compra  = $idcompra";
 		if (parent::ejecutar($sql))
 			return true;
@@ -339,7 +362,10 @@ class Compra extends Conexion
 					   a.subtotal_compra, 
 					   e.monto_compra,
 					   e.compra_credito,
-					   e.cancelado
+					   e.cancelado,
+					   a.stock_actual,
+					   b.id_producto,
+					   a.id_compra
 				  FROM tb_compra_producto AS a 
 			INNER JOIN tb_compra AS e ON a.id_compra = e.id_compra 
 			INNER JOIN tb_producto AS b ON a.id_producto = b.id_producto 
