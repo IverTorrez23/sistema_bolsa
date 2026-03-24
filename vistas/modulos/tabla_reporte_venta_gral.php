@@ -11,6 +11,7 @@ $_SESSION["idalmacen"] = $idalmacen;
 include_once("../../modelos/empleado.modelo.php");
 include_once("../../modelos/almacen.modelo.php");
 include_once("../../modelos/venta.modelo.php");
+include_once("../../modelos/cuotaVenta.modelo.php");
 
 if ($idalmacen == 0) {
   $nombreVendedor = 'Todos';
@@ -35,6 +36,7 @@ if ($idalmacen == 0) {
       <th>Cancelado</th>
       <th>Usuario</th>
       <th>Venta Total</th>
+      <!-- <th>Saldo</th> -->
       <th>Borrar</th>
     </tr>
   </thead>
@@ -52,10 +54,21 @@ if ($idalmacen == 0) {
     $sumatodasVentas = 0;
     $montoaunenInversion = 0;
     $sumaMontoaunenInversion = 0;
+    $saldoPorCancelar =0;
+    $sumaCuotaVenta=0;
     $obj = new Venta();
+    $objCuotaVenta = new CuotaVenta();
     $resultado = $obj->ReporteVentasActivas($fechaIni, $fechaFin);
     
     while ($fila = mysqli_fetch_object($resultado)) {
+
+    if($fila->venta_credito == 1){
+      $resultCuota = $objCuotaVenta->sumatoriaDeCuotaDeVenta($fila->idventa);
+        $filaCuota = mysqli_fetch_object($resultCuota);
+        $sumaCuotaVenta = $filaCuota->sumaCuotas;
+        $saldoPorCancelar1 = $fila->monto_venta - $sumaCuotaVenta;
+        $saldoPorCancelar = number_format((float)$saldoPorCancelar1, 2, '.', '');
+    }
       
     ?>
       <tr>
@@ -77,13 +90,13 @@ if ($idalmacen == 0) {
           <?php if ($fila->cancelado == 1): ?>
             <i class="fa fa-check-circle" style="color: green;"></i>
           <?php else: ?>
-            <i class="fa fa-circle" style="color: gray; cursor:pointer;" onclick="modalCuota(<?php echo $fila->idventa; ?>,<?php echo $fila->monto_venta; ?>)" data-toggle="modal" data-target="#modalCuota"></i>
+            <button class="btn btn-warning btn-xs" style="cursor:pointer;" onclick="modalCuota(<?php echo $fila->idventa; ?>,<?php echo $fila->monto_venta; ?>,<?php echo $saldoPorCancelar; ?>)" data-toggle="modal" data-target="#modalCuota">Por cancelar</button>
           <?php endif; ?>
         </td>
         <!-- <td><?php echo number_format((float)$montoaunenInversion, 2, '.', ''); ?></td> -->
         <td><?php echo $fila->Usuario; ?></td>
         <td><?php echo $fila->monto_venta; ?></td>
-
+        <!-- <td><?php echo $saldoPorCancelar; ?></td> -->
 
         <td>
           <div class="btn-group">

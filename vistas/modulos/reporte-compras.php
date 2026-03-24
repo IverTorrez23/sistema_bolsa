@@ -135,7 +135,8 @@ if ($_SESSION["tipo_user"] != "admin") {
                 <div class="form-group">
                   <div class="input-group">
                     <!-- <label>Todos los productos  de venta se eliminaran </label>-->
-                    <label>Se agregara un pago a la compra: &nbsp; </label> <label id="labelcodigo"></label> <label>&nbsp;</label>
+                    <label>Se agregara un pago a la compra: &nbsp; </label> <label id="labelcodigo"></label> <label>&nbsp;</label><br>
+                    <label>Saldo Por Cancelar: &nbsp; </label> <label id="labelsaldo"></label> <label>&nbsp; Bs.</label>
                   </div>
                 </div>
 
@@ -360,10 +361,11 @@ $(document).ready(function() {
     }); 
   });
 
-  function modalCuota(idcompra, montoCompra) {
+  function modalCuota(idcompra, montoCompra,saldoPorCancelar) {
     console.log(idcompra, montoCompra);
     $('#idcompra').val(idcompra);
     $('#txtmontoCompra').val(montoCompra);
     $('#labelcodigo').text(idcompra);
+    $('#labelsaldo').text(saldoPorCancelar);
   }
 </script>

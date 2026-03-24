@@ -36,7 +36,7 @@ function ctrlGuardarCompra()
 	}
 
 	$objcomp = new Compra();
-	$objcomp->set_fechaCompra($fechaHora);
+	$objcomp->set_fechaCompra($_POST["fechaCompra"]);
 	$objcomp->set_montoCompra($montoCompra);
 	$objcomp->set_CompraFacturada($sw_facura);
 	$objcomp->set_CostoFactura(0);
@@ -46,6 +46,7 @@ function ctrlGuardarCompra()
 	$objcomp->set_compraCredito($_POST["switchCredit"]);
 	$objcomp->set_cancelado($esCancelado);
 	$objcomp->set_estadoCompra("Activo");
+	$objcomp->set_fechaRegistro($fechaHora);
 	if ($objcomp->guardarCompra()) {
 		#SE REGISTRA LA TERCER TABLA COMPRA_PRODUCTO
 		$resultultima = $objcomp->mostrarUltimaCompra();

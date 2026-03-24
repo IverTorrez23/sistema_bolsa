@@ -1,0 +1,2 @@
+ALTER TABLE tb_compra ADD fecha_registro datetime
+ALTER TABLE tb_venta ADD fecha_registro datetime

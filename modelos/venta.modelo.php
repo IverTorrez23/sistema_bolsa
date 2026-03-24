@@ -15,6 +15,7 @@
 		private $estado;
 		private $usuario_baja;
 		private $fecha_baja;
+		private $fecha_registro;
 
 		public function Venta()
 		{
@@ -32,6 +33,7 @@
 			$this->estado = "";
 			$this->usuario_baja = 0;
 			$this->fecha_baja = "";
+			$this->fecha_registro= "";
 		}
 
 		public function setid_venta($valor)
@@ -148,6 +150,14 @@
 		{
 			return $this->fecha_baja;
 		}
+		public function set_fechaRegistro($valor)
+		{
+			$this->fecha_registro = $valor;
+		}
+		public function get_fechaRegistro()
+		{
+			return $this->fecha_registro;
+		}
 
 
 
@@ -164,7 +174,8 @@
 										 venta_cerrada,
 										 estado,
 										 usuario_baja,
-										 fecha_baja) 
+										 fecha_baja,
+										 fecha_registro) 
 								  VALUES('$this->fecha_venta',
 								         '$this->monto_venta',
 										 '$this->venta_facturada',
@@ -176,7 +187,8 @@
 										 '$this->venta_cerrada',
 										 '$this->estado',
 										 '$this->usuario_baja',
-										 '$this->fecha_baja')";
+										 '$this->fecha_baja',
+										 '$this->fecha_registro')";
 			if (parent::ejecutar($sql))
 				return true;
 			else

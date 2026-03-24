@@ -93,6 +93,7 @@ session_start();
         $_GET["ruta"] == "clientes" ||
         $_GET["ruta"] == "compras" ||
         $_GET["ruta"] == "compras-nuevas" || //nueva version de compras
+        $_GET["ruta"] == "detalle-compra" ||
         $_GET["ruta"] == "crear-ventas" ||
         $_GET["ruta"] == "crear-ventas01" || /*pagina de prueba para venta*/
         $_GET["ruta"] == "crear-ventas-nueva" ||

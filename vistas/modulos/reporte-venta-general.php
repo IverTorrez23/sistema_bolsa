@@ -127,15 +127,16 @@ if ($_SESSION["tipo_user"] != "admin") {
             <div class="form-group">
               <div class="input-group">
 
-                <input type="text" name="idventa" id="idventa" placeholder="id venta">
-                <input type="text" name="txtmontoVenta" id="txtmontoVenta" placeholder="monto venta">
-                <input type="text" name="texttipouser" id="texttipouser" value="<?php echo $_SESSION['tipouser'] ?>">
-                <input type="text" name="textiduser" id="textiduser" value="<?php echo $iduseractual; ?>">
+                <input type="hidden" name="idventa" id="idventa" placeholder="id venta">
+                <input type="hidden" name="txtmontoVenta" id="txtmontoVenta" placeholder="monto venta">
+                <input type="hidden" name="texttipouser" id="texttipouser" value="<?php echo $_SESSION['tipouser'] ?>">
+                <input type="hidden" name="textiduser" id="textiduser" value="<?php echo $iduseractual; ?>">
 
                 <div class="form-group">
                   <div class="input-group">
                     <!-- <label>Todos los productos  de venta se eliminaran </label>-->
-                    <label>Se agregara un pago a la venta: &nbsp; </label> <label id="labelcodigo"></label> <label>&nbsp;</label>
+                    <label>Se agregara un pago a la venta: &nbsp; </label> <label id="labelcodigo"></label> <label>&nbsp;</label><br>
+                    <label>Saldo Por Cancelar: &nbsp; </label> <label id="labelsaldo"></label> <label>&nbsp; Bs.</label>
                   </div>
                 </div>
 
@@ -381,10 +382,11 @@ $(document).ready(function() {
     }); 
   });
 
-  function modalCuota(idventa, montoVenta) {
+  function modalCuota(idventa, montoVenta, saldoPorCancelar) {
     console.log(idventa, montoVenta);
     $('#idventa').val(idventa);
     $('#txtmontoVenta').val(montoVenta);
     $('#labelcodigo').text(idventa);
+    $('#labelsaldo').text(saldoPorCancelar);
   }
 </script>

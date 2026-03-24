@@ -305,7 +305,7 @@ WHERE tb_producto.id_producto=tb_compra_producto.id_producto AND tb_compra_produ
 		return parent::ejecutar($sql);
 	}
 
-	public function editarCompraProducto($idcompra)
+	public function editarCompraProducto($idcompraproducto)
 	{
 		$sql = "UPDATE tb_compra_producto
 		        set subtotal_compra='$this->subtotal_compra',
@@ -317,7 +317,7 @@ WHERE tb_producto.id_producto=tb_compra_producto.id_producto AND tb_compra_produ
 		            precio_venta_prod_Fact='$this->precio_venta_prod_Fact',
 		            stock_actual='$this->stock_actual',
 		            precio_tope='$this->precio_tope'
-            WHERE id_compra=$idcompra ";
+            WHERE id_compra_producto=$idcompraproducto ";
 
 		if (parent::ejecutar($sql))
 			return true;

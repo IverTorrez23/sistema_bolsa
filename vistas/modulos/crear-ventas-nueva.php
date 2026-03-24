@@ -5,6 +5,7 @@ include_once("modelos/marca.modelo.php");
 include_once("modelos/categorias.modelo.php");
 include_once("modelos/clientes.modelo.php");
 include_once("modelos/compraProducto.modelo.php");
+date_default_timezone_set('America/La_Paz');
 ?>
 <!-- Content Wrapper. Contains page content -->
 
@@ -171,6 +172,13 @@ include_once("modelos/compraProducto.modelo.php");
     <div class="checkbox">
       <label>
         <input type="checkbox" name="checkVentCred" id="checkVentCred" > Venta credito
+      </label>
+    </div>
+
+    <div class="">
+      <label>
+        Fecha Venta: 
+        <input type="date" class="form-control" name="fechaVenta" id="fechaVenta" value="<?php echo date('Y-m-d'); ?>">
       </label>
     </div>
     <!--<small>CODIGO:</small>  <input type="text" name="" id="miInput" value="" autofocus placeholder="CODIGO PRODUCTO">
@@ -612,6 +620,7 @@ include_once("modelos/compraProducto.modelo.php");
       var textiduser = $("#textiduser").val();
       var texttipouser = $("#texttipouser").val();
       var cuotaVenta = $("#cuotaVenta").val();
+      var fechaVenta = $("#fechaVenta").val();
       var switchCredit = 0;
 
       var switchfactura = "";
@@ -724,6 +733,7 @@ include_once("modelos/compraProducto.modelo.php");
         formDataVenta.append('texttipouser', texttipouser);
         formDataVenta.append('switchCredit', switchCredit);
         formDataVenta.append('cuotaVenta', cuotaVenta);
+        formDataVenta.append('fechaVenta', fechaVenta);
         $.ajax({
           url: 'controladores/venta.controlador.php',
           type: 'post',
