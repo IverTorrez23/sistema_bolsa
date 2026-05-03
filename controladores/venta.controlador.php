@@ -11,10 +11,10 @@ if (isset($_POST["btnguardarventa"])) {
 if (isset($_POST["btnelimventa"])) {
 	ctrlElimVenta();
 }
-// if (isset($_POST["btnelimMarca"])) 
-// {
-// 	ctrlDarBajaMarca();
-// }
+ if (isset($_POST["btnElimitemventa"])) 
+ {
+ 	ctrldeletItemVenta();
+ }
 
 
 function ctrlguardarVenta()
@@ -157,4 +157,41 @@ function guardarCuotaVenta($idVenta)
 	//$objcuota->set_usuarioBaja();
 	//$objcuota->set_fechaBaja();
 	$objcuota->guardarCuotaVenta();
+}
+
+function ctrldeletItemVenta(){
+	$idventaproducto = $_POST["idventaproducto"];
+	$cantidadProd = $_POST["cantidadvent"];
+	$idcompraproducto = $_POST["idcompraproducto"];
+	$subtotalventa = $_POST["subtotalventa"];
+	$totalventa = $_POST["totalventa"];
+	$idventa = $_POST["idventa"];
+    
+	$montoVentaActualizado= $totalventa - $subtotalventa;
+	$obj1 = new VentaProducto();
+	if($obj1->darBajaVentaProducto($idventaproducto)){
+		/*ACTUALIZACION DEL STOCK DE tb_compra_producto*/
+		$objComPProd = new Compra_Producto();
+		$resultStock = $objComPProd->mostrarStockActualDeCompraProd($idcompraproducto);
+		$filstock = mysqli_fetch_object($resultStock);
+		$stockActualizado = ($filstock->stock_actual) + ($cantidadProd);
+
+		if ($objComPProd->actualizarStockDeLoteProd($stockActualizado, $idcompraproducto)){
+             //Actualizacion de monto de venta
+			 $objv=new Venta();
+			 if($objv->actualizarMontoVenta($idventa, $montoVentaActualizado)){
+                echo 1;
+			 }else{
+				echo 3; //no se actualizo el monto de venta correctamente
+			 }
+		}else{
+			echo 2; ///estock no se pudo actualizar
+		} 
+
+
+	}else{
+		echo 0; //fallo al dar baja el item de la venta
+	}
+
+
 }

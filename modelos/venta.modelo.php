@@ -487,6 +487,7 @@
 		public function nota_Venta($idventa)
 		{
 			$sql = "SELECT 
+			            a.id_venta_producto,
 						a.cantidad_prod, 
 						b.nombre_producto, 
 						b.codigo_producto,
@@ -495,7 +496,8 @@
 						a.codigo_prod, 
 						a.precio_unitario_venta, 
 						a.subtotal_venta, 
-						e.monto_venta 
+						e.monto_venta,
+						d.id_compra_producto
 					FROM tb_venta_producto AS a
 					INNER JOIN tb_venta AS e ON a.id_venta = e.id_venta
 					INNER JOIN tb_compra_producto AS d ON a.id_compra_producto = d.id_compra_producto
@@ -503,7 +505,8 @@
 					LEFT JOIN tb_marca AS c ON b.id_marca = c.id_marca
 					-- Si quisieras agregar categoría en el futuro:
 					-- LEFT JOIN tb_categoria AS cat ON b.id_categoria = cat.id_categoria 
-					WHERE e.id_venta = $idventa";
+					WHERE a.estado = 'Activo'
+					     AND e.id_venta = $idventa";
 			return parent::ejecutar($sql);
 		}
 
@@ -577,6 +580,16 @@
 		{
 			$sql = "UPDATE tb_venta
 		           set venta_cerrada = 1
+		         WHERE id_venta  = $idventa";
+			if (parent::ejecutar($sql))
+				return true;
+			else
+				return false;
+		}
+		public function actualizarMontoVenta($idventa,$montoVenta)
+		{
+			$sql = "UPDATE tb_venta
+		           set monto_venta = $montoVenta
 		         WHERE id_venta  = $idventa";
 			if (parent::ejecutar($sql))
 				return true;
