@@ -36,7 +36,7 @@ if ($idalmacen == 0) {
       <th>Cancelado</th>
       <th>Usuario</th>
       <th>Venta Total</th>
-      <!-- <th>Saldo</th> -->
+      <th>Ver</th>
       <th>Borrar</th>
     </tr>
   </thead>
@@ -97,7 +97,7 @@ if ($idalmacen == 0) {
         <td><?php echo $fila->Usuario; ?></td>
         <td><?php echo $fila->monto_venta; ?></td>
         <!-- <td><?php echo $saldoPorCancelar; ?></td> -->
-
+        <td><button class="btn btn-info"><a target="_blank" href="detalle-venta?codventa=<?php echo $fila->idventa; ?>"><i class="fa fa-eye"></i></a> </button> </td>
         <td>
           <div class="btn-group">
             <button class="btn btn-danger" data-toggle="modal" data-target="#modalElimVenta" onclick="CargarinfoVentaElim('<?php echo $fila->idventa; ?>')"><i class="fa fa-times"></i></button>

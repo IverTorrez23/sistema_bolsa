@@ -111,7 +111,7 @@ estado varchar(10),
 tipo_reg varchar(10),
 usuario_baja int,
 fecha_baja datetime,
-fecha_registro datetime,
+fecha_registro datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE tb_compra_producto(
