@@ -89,7 +89,7 @@ function ctrlguardarCierreCaja()
 					} //fin del if que pregunta si cantidad de ventas es mayor a cero 0
 					if ($contador == $cantVentas) //preguntamos si se registro todas la ventas  en el cierre
 					{
-						echo 1;
+						echo $ultcierre; //cierre exitoso
 					} else {
 						echo 0;
 					}

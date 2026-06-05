@@ -842,7 +842,8 @@ date_default_timezone_set('America/La_Paz');
       var cantidadEntero = parseInt(cantidaddeProd);
       var precioRealVentaProdFloat = parseFloat(precioRealVentaProd);
       if (cantidadEntero > 0) /*preguntamos si cantidad es mayor a cero*/ {
-        var precioUnitarioDeProd = parseFloat((subtotalFloat) / (cantidadEntero));
+        var precioUnitarioDeProd = (subtotalFloat) / (cantidadEntero).toFixed(2);
+        //var precioUnitarioDeProd = parseFloat((subtotalFloat) / (cantidadEntero));
         if (precioUnitarioDeProd >= precioRealVentaProdFloat) {
 
         } else {
