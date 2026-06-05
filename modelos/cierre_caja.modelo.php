@@ -238,7 +238,7 @@ class Cierre_caja extends Conexion{
 		        FROM tb_cierre_caja as a
 		  LEFT JOIN tb_empleado as b
 		          on a.id_empleado=b.id_empleado
-		       WHERE cast(a.fecha_cierre as date) BETWEEN '$fechaini' AND '$fechafin'
+		       WHERE cast(a.fecha_alta as date) BETWEEN '$fechaini' AND '$fechafin'
 		         and a.estado='Activo'
 		    ORDER BY a.fecha_cierre DESC ";
 		      return parent::ejecutar($sql);
@@ -294,6 +294,31 @@ class Cierre_caja extends Conexion{
 		         WHERE a.estado='Activo'
 		    ORDER BY a.fecha_cierre DESC";
 		      return parent::ejecutar($sql);
+	}
+	function cierreCaja($idCierre)
+	{
+		$sql="SELECT a.id_cierre_caja,
+		             cast(a.fecha_cierre as date) as fecha_cierre,
+					 cast(a.fecha_cierre_fin as date) as fecha_cierre_fin,
+		             a.monto_venta_cierre,
+		             a.monto_caja,
+		             a.monto_sobrante,
+		             a.cantidad_ventas,
+		             a.cantidad_productos,
+		             a.fecha_alta,
+		             concat(b.nombre_empleado,' ',b.apellido_empleado) as empleado
+		        FROM tb_cierre_caja as a
+		  LEFT JOIN tb_empleado as b
+		          on a.id_empleado=b.id_empleado
+		       WHERE a.id_cierre_caja = $idCierre
+		         and a.estado='Activo'
+		    ORDER BY a.fecha_cierre DESC ";
+		      return parent::ejecutar($sql);
+	}
+	public function mostrarUltimoCierre()
+	{
+		$sql = "SELECT MAX(id_cierre_caja)AS idultimocierre  FROM tb_cierre_caja ";
+		return parent::ejecutar($sql);
 	}
 
 	

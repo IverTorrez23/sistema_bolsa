@@ -89,7 +89,8 @@ $idCompra = $_GET["codcompra"];
                 $fila->precio_venta_prod . "||" .
                 $fila->precio_unit_compra . "||" .
                 $fila->id_compra . "||" .
-                $fila->monto_compra;
+                $fila->monto_compra . "||" .
+                $fila->stock_actual;
 
 
           $montoaunenInversion = ($fila->precio_unit_compra * $fila->stock_actual);
@@ -118,7 +119,9 @@ $idCompra = $_GET["codcompra"];
                 <td>
                   <div class="btn-group">
                     <?php
-                    if ($fila->cantidad_compra == $fila->stock_actual) {
+                    //if ($fila->cantidad_compra == $fila->stock_actual) 
+                    if ($fila->stock_actual > 0) 
+                    {
                     ?>
                       <button class="btn btn-warning" data-toggle="modal" data-target="#modaleditarCompra" onclick="CargarinfoCompraEnModal('<?php echo $datosLote ?>')"><i class="fa fa-pencil"></i></button>
                     <?php
@@ -222,6 +225,7 @@ $idCompra = $_GET["codcompra"];
               <input type="number" class="form-control input-lx" min="1" name="costoSubTotalcompraedit" id="costoSubTotalcompraedit" placeholder="Ingresar costo total" required="" onkeyup="calcularCostoPorUnidadEdit();" autocomplete="off">
               <input type="hidden" class="form-control input-lx" min="1" name="totalMontocompra" id="totalMontocompra" placeholder="Monto total" readonly>
               <input type="hidden" class="form-control input-lx" min="1" name="subTotalViejo" id="subTotalViejo" placeholder="sub total viejo" readonly>
+               
             </div>
           </div>
 
@@ -265,6 +269,8 @@ $idCompra = $_GET["codcompra"];
                  <input type="text" class="form-control input-lx" name="nuevoCostoCompFactedit" id="nuevoCostoCompFactedit" placeholder="Ingresar costo de producto facturada" required="" >
               </div>  
             </div>-->
+            <input type="hidden" class="form-control input-lx"  name="stockactual" id="stockactual" placeholder="stock actual" >
+            <input type="hidden" class="form-control input-lx"  name="cantVendidos" id="cantVendidos" placeholder="cantidad vendidos" >
 
 
 
@@ -296,6 +302,13 @@ $idCompra = $_GET["codcompra"];
     $('#idcompra').val(f[6]);
     $('#totalMontocompra').val(f[7]);
     $('#subTotalViejo').val(f[3]);
+    $('#stockactual').val(f[8]);
+    //obtener el total de cantidad vendidos
+    var cantidadCompra = f[2];
+    var stockActual= f[8];
+    var cantidadVendidos = cantidadCompra - stockActual;
+    
+    $('#cantVendidos').val(cantidadVendidos);
 
   }
 
@@ -317,6 +330,8 @@ $idCompra = $_GET["codcompra"];
       var idcompra = $('#idcompra').val();
       var totalMontocompra = $('#totalMontocompra').val();
       var subTotalViejo = $('#subTotalViejo').val();
+      var stockactual = $('#stockactual').val();
+      var cantVendidos = $('#cantVendidos').val();
 
 
 
@@ -346,6 +361,8 @@ $idCompra = $_GET["codcompra"];
         formDataCompedit.append('totalMontocompra', totalMontocompra);
         formDataCompedit.append('subTotalViejo', subTotalViejo);
         formDataCompedit.append('btnguardarCompraEdit', btnguardarCompraEdit);
+        formDataCompedit.append('stockactual', stockactual);
+        formDataCompedit.append('cantVendidos', cantVendidos);
 
         $.ajax({
           url: 'controladores/compra.controlador.php',
@@ -368,7 +385,8 @@ $idCompra = $_GET["codcompra"];
             } else {
               if (response == 2) {
                 setTimeout(function() {}, 2000);
-                swal('ERROR', 'No se puede actualizar, Hay ventas registradas de esta compra (Nº Lote), primero debe eliminar la venta', 'error');
+                //swal('ERROR', 'No se puede actualizar, Hay ventas registradas de esta compra (Nº Lote), primero debe eliminar la venta', 'error');
+                swal('ERROR', 'No se puede actualizar, la cantidad en stock es cero', 'error');
               } else {
                 setTimeout(function() {}, 2000);
                 swal('ERROR', 'Intente nuevamente', 'error');

@@ -329,14 +329,14 @@ if ($_SESSION["tipo_user"] != "admin") {
         //    var posOk=response[1];
         //    var posIdpregunta=response[4];
         //    console.info(posIdpregunta);
-        if (response == 1) {
+        if (response > 0) {
 
           Swal.fire(
             'Exelente!',
             'Caja cerrada con exito',
             'success',
             setTimeout(function() {
-              location.href = 'cierre-cajas';
+              location.href = 'impresiones/tcpdf/pdf/nota_cierre.php?codcierre=' + response;
             }, 2000)
           )
 
@@ -345,14 +345,14 @@ if ($_SESSION["tipo_user"] != "admin") {
             setTimeout(function() {}, 2000);
             swal('Error', 'Intente nuevamente', 'error');
           } else {
-            if (response == 2) {
+            if (response == -2) {
               Swal.fire(
                 'Error!',
                 'Este empleado ya tiene registrado cierre de caja con esta fecha',
                 'error'
               )
             } else {
-              if (response == 3) {
+              if (response == -3) {
                 Swal.fire(
                   'Error!',
                   'No puede hacer un cierre con una fecha mayor a las fecha actual',

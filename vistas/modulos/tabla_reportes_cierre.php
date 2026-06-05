@@ -30,15 +30,15 @@ else
              <thead>
                 <tr>
                   <th>Cod. cierre</th>
-                  <th>Fecha cierre</th>
+                  <th>Fecha inicio ventas</th>
+                  <th>Fecha fin ventas</th>
                    <th>Cantidad ventas</th>
                   <th>Cantidad productos</th> 
                   <th>Monto de venta</th>
                   <th>Monto entregado de caja</th>
-                  <th>Monto sobrante</th>
+                  <th>Monto diferencia</th>
                      
                    <th>Fecha de registro</th>
-                   <!-- <th>Empleado de cierre</th> -->
                   <th>Borrar</th>
                 </tr>
              </thead>
@@ -81,8 +81,9 @@ else
                                                     
               ?>
                <tr > 
-                 <td ><?php echo $fila->id_cierre_caja; ?></td>
+                 <td ><a target="_blank" href="impresiones/tcpdf/pdf/nota_cierre.php?codcierre=<?php echo $fila->id_cierre_caja; ?>"> <?php echo $fila->id_cierre_caja; ?></a></td>
                  <td><?php echo $fila->fecha_cierre; ?></td>
+                 <td><?php echo $fila->fecha_cierre_fin; ?></td>
                  <td><?php echo $fila->cantidad_ventas; ?></td>
                  <td><?php echo $fila->cantidad_productos; ?></td>
                  <td><?php echo $fila->monto_venta_cierre; ?></td>
@@ -90,7 +91,6 @@ else
                  <td><?php echo $fila->monto_sobrante; ?></td> 
                  
                  <td><?php echo $fila->fecha_alta; ?></td>
-                  <!-- <td><?php echo $fila->empleado; ?></td>                -->
                  <td>
                    <div class="btn-group">
                       <button class="btn btn-danger" data-toggle="modal" data-target="#modalElimCierreCaja" onclick="CargarinfoCierreElim('<?php echo $datosventa ?>')"><i class="fa fa-times"></i></button>
@@ -122,7 +122,7 @@ else
              </tbody>
              <tfoot>
                <tr>
-                 <td colspan="4" style="text-align: center;"><b>Totales</b> </td>
+                 <td colspan="5" style="text-align: center;"><b>Totales</b> </td>
                  <td><b><?php echo number_format((float)$suma_montosventas, 2, '.', ''); ?></b></td>
                  <td><b><?php echo number_format((float)$suma_cajaentregado, 2, '.', ''); ?></b></td>
                  <td><b><?php echo number_format((float)$suma_sobrantes, 2, '.', ''); ?></b></td>

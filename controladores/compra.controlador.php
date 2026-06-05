@@ -196,12 +196,16 @@ function eliminarCompra()
 
 function ctrlEditarCompra()
 {
+	//$stockActual= $_POST["stockactual"];
+	$cantidadCompra = $_POST['nuevoCantidadedit'];
+	$cantVendidos = $_POST["cantVendidos"];
+	$stockActual = $cantidadCompra - $cantVendidos;
 	$sw_facura = "no";
 	#validacion que no se haya echo alguna venta de esta compra(es decir, que no se haya vendido algun producto)
 	$objventap = new VentaProducto();
 	$resultvent = $objventap->mostrarCantidadVentasDeCodCompra($_POST['idcompraproducto']);
 	$filvent = mysqli_fetch_object($resultvent);
-	if ($filvent->cantidad_ventas > 0) {
+	if ($stockActual == 0) {
 		echo 2; //muestra la alerta que indica que hay ventas con el codigo de lote(id_compra_producto)
 	} else {
 		$totalMontocompra = $_POST["totalMontocompra"];
@@ -218,13 +222,13 @@ function ctrlEditarCompra()
 		if ($objcomedit->editarMontoCompra($_POST['idcompra'])) {
 			$objComProdedit = new Compra_Producto();
 			$objComProdedit->set_subtotalCompra($_POST["costoSubTotalcompraedit"]);
-			$objComProdedit->set_cantidadCompra($_POST['nuevoCantidadedit']);
+			$objComProdedit->set_cantidadCompra($cantidadCompra);
 			$objComProdedit->set_idProducto($_POST['selectprodedit']);
 			$objComProdedit->set_precioUnitCompra($_POST['nuevoCostoCompedit']);
 			$objComProdedit->set_precioUnitCompraFactu(0);
 			$objComProdedit->set_precioVentaProd($_POST['nuevoCostoVentaedit']);
 			$objComProdedit->set_precioVentaProduFact($_POST['nuevoCostoVentaedit']);
-			$objComProdedit->set_stockActual($_POST['nuevoCantidadedit']);
+			$objComProdedit->set_stockActual($stockActual);
 			$objComProdedit->set_precioTope($_POST['nuevoCostoVentaedit']);
 
 			if ($objComProdedit->editarCompraProducto($_POST['idcompraproducto'])) {
