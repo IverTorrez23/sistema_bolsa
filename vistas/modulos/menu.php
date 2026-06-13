@@ -152,6 +152,12 @@
 							<i class="fa fa-circle-o"></i>
 							<span>Reportes</span>
 						</a>
+					</li>
+					<li>
+						<a href="modificar-lote">
+							<i class="fa fa-circle-o"></i>
+							<span>Modificar Lote</span>
+						</a>
 					</li>		
 				</ul>
 			</li>
