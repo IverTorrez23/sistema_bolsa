@@ -110,7 +110,8 @@ session_start();
         $_GET["ruta"] == "mis-ventas" ||
         $_GET["ruta"] == "cierre-cajas" ||
         $_GET["ruta"] == "reporte-compras" ||
-        $_GET["ruta"] == "reporte-compras" ||
+       // $_GET["ruta"] == "reporte-compras" ||
+       $_GET["ruta"] == "modificar-lote" ||
         $_GET["ruta"] == "almacen" ||
         $_GET["ruta"] == "salir"
       ) {

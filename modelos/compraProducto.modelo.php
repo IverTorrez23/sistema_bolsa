@@ -361,4 +361,28 @@ WHERE tb_producto.id_producto=tb_compra_producto.id_producto AND tb_compra_produ
 			     AND tb_compra_producto.id_compra_producto=$idcompra";
 		return parent::ejecutar($sql);
 	}
+	public function mostrarUnLote($lote)
+	{
+		$sql = "SELECT a.id_compra_producto,
+		               a.cantidad_compra, 
+		               b.nombre_producto, 
+					   b.codigo_producto, 
+					   b.descripcion, 
+					   COALESCE(c.nombre_marca, 'Sin Marca') AS nombre_marca,
+					   a.precio_unit_compra,
+					   a.precio_venta_prod, 
+					   a.subtotal_compra, 
+					   e.monto_compra,
+					   e.compra_credito,
+					   e.cancelado,
+					   a.stock_actual,
+					   b.id_producto,
+					   a.id_compra
+				  FROM tb_compra_producto AS a 
+			INNER JOIN tb_compra AS e ON a.id_compra = e.id_compra 
+			INNER JOIN tb_producto AS b ON a.id_producto = b.id_producto 
+			 LEFT JOIN tb_marca AS c ON b.id_marca = c.id_marca 
+			     WHERE a.id_compra_producto = $lote";
+		return parent::ejecutar($sql);
+	}
 }
