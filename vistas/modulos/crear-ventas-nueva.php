@@ -42,23 +42,14 @@ date_default_timezone_set('America/La_Paz');
           <table class="table table-bordered table-striped tablas tablaProductos">
             <thead>
               <tr>
-
                 <th>Nombre</th>
                 <th>Medidas</th>
                 <th>Nº Lote</th>
-                <!-- <th>Codigo</th> -->
-
                 <th>Marca</th>
                 <th>Stok</th>
-                <!--  <th>Stok Simple</th> -->
-                <!--  <th>P. Compra</th> -->
                 <th>P. Venta</th>
-
                 <th style="width: 2%;">Cantidad</th>
-
                 <th>Accion</th>
-                <!-- <th>Acciones</th> -->
-
               </tr>
             </thead>
 
@@ -82,15 +73,10 @@ date_default_timezone_set('America/La_Paz');
 
               ?>
                 <tr>
-
                   <td><?php echo $fila->mombreProducto; ?></td>
                   <td><?php echo $fila->prodDescripsion; ?></td>
                   <td><?php echo $fila->idcompraprod; ?></td>
-
-
                   <td><?php echo $fila->marcaProd; ?></td>
-
-
                   <?php
                   /*IF PARA PREGUNTAR SI EL STOK FACTURADO DEL PRODUCTO ES MENOR A 11*/
                   if ($fila->stokactual <= 10) {
@@ -98,32 +84,23 @@ date_default_timezone_set('America/La_Paz');
                   } else {
                     $tipoboton = "btn-success";
                   }
-                  /*IF PARA PREGUNTAR SI EL STOK SIMPLE DEL PRODUCTO ES MAYOR A 10*/
-                  // if ($fila->stock_simple<=10) 
-                  // {
-                  //  $tipobotonsim="btn-danger";
-                  // }
-                  // else
-                  // {
-                  //  $tipobotonsim="btn-success";
-                  // }
+
                   ?>
-                  <td><span class="btn <?php echo $tipoboton ?>"><?php echo $fila->stokactual; ?></span> </td>
-                  <!-- <td><span class="btn <?php echo $tipobotonsim ?>"><?php echo $fila->stock_simple; ?></span></td> -->
-                  <!--  <td><?php echo $fila->stock_simple; ?></td> -->
+                  <td><span id="stock-<?php echo $fila->idcompraprod; ?>" class="btn <?php echo $tipoboton ?> stock-valor" data-stock="<?php echo $fila->stokactual; ?>">
+                      <?php echo $fila->stokactual; ?>
+                    </span>
+                  </td>
+
                   <td><?php echo $fila->precioVentaprod; ?></td>
+                  <td>
+                    <input type="number" id="<?php echo $fila->idcompraprod; ?>" class="cantidad-vender" name="<?php echo $fila->idcompraprod; ?>" placeholder="Cantidad" min="1">
+                  </td>
+                  <td>
+                    <button class="btn btn-success btn-xs agregarProducto recuperarBoton" data-id="<?php echo $fila->idcompraprod ?>">
+                      Agregar <i class="fa fa-plus"></i>
+                    </button>
+                  </td>
 
-
-
-                  <td><input type="number" id="<?php echo $fila->idcompraprod; ?>" name="<?php echo $fila->idcompraprod; ?>" placeholder="Cantidad"></td>
-                  <td><button class="btn btn-success btn-xs agregarProducto recuperarBoton" data-id="<?php echo $fila->idcompraprod ?>">Agregar <i class="fa  fa-plus"></i> </button> </td>
-                  <!--   <td>
-                   <div class="btn-group">
-                      <button class="btn btn-warning" data-toggle="modal" data-target="#modalEditProd" onclick="CargarinfoProdEnModal('<?php echo $datosProd ?>')"><i class="fa fa-pencil"></i></button>
-
-                      <button class="btn btn-danger" data-toggle="modal" data-target="#modalElimProd" onclick="CargarinfoProdEnModalElim('<?php echo $datosProd ?>')"><i class="fa fa-times"></i></button>
-                   </div>
-                 </td> -->
                 </tr>
               <?php
                 $contador++;
@@ -166,18 +143,18 @@ date_default_timezone_set('America/La_Paz');
 
     <div class="checkbox" style="display: none;">
       <label>
-        <input type="checkbox" name="checkfact" id="checkfact" > Venta Facturada
+        <input type="checkbox" name="checkfact" id="checkfact"> Venta Facturada
       </label>
     </div>
     <div class="checkbox">
       <label>
-        <input type="checkbox" name="checkVentCred" id="checkVentCred" > Venta credito
+        <input type="checkbox" name="checkVentCred" id="checkVentCred"> Venta credito
       </label>
     </div>
 
     <div class="">
       <label>
-        Fecha Venta: 
+        Fecha Venta:
         <input type="date" class="form-control" name="fechaVenta" id="fechaVenta" value="<?php echo date('Y-m-d'); ?>">
       </label>
     </div>
@@ -254,9 +231,9 @@ date_default_timezone_set('America/La_Paz');
       <!-- /.col-xs-12 -->
     </div>
     <!-- /.row -->
-     <div class="contenedor-cuota" style="float: right; display: none;">
-     Cuota: <input type="text" id="cuotaVenta" name="cuotaVenta" style="float: right;" autocomplete="off">
-     </div><br><br>
+    <div class="contenedor-cuota" style="float: right; display: none;">
+      Cuota: <input type="text" id="cuotaVenta" name="cuotaVenta" style="float: right;" autocomplete="off">
+    </div><br><br>
     <button class="btn btn-primary" id="btnguardarventa" name="btnguardarventa" style="float: right;display: none;">Guardar venta</button>
 
     <br>
@@ -280,15 +257,17 @@ date_default_timezone_set('America/La_Paz');
   window.addEventListener('pageshow', function(event) {
     // Si event.persisted es true, significa que la página viene de la caché
     if (event.persisted || (typeof window.performance != "undefined" && window.performance.navigation.type === 2)) {
-        window.location.reload();
+      window.location.reload();
     }
-});
+  });
 
 
   var arrayIdproductosVenta = [];
   var arrayPrecioOficialProducto = [];
   var arrayPrecioOficialFacturadoProducto = [];
-  $(".tablaProductos").on("click", "button.agregarProducto", function() {
+  $(".tablaProductos").on("click", "button.agregarProducto", function(e) {
+
+
 
     var id = $(this).attr("data-id"); /*obtenemos el dato que cargamos en el campo 'data-id'  */
     let cantidad_ingresada_venta = $("#" + id + "").val(); //obtenemos la cantidad ingresada en el listado, antes de oprimir el boton Agregar
@@ -296,9 +275,69 @@ date_default_timezone_set('America/La_Paz');
     //console.log(id);  
     //$(this).removeClass("btn-success agregarProducto");// se elimina la clase para que ya no pueda agregar el mismo producto
     //$(this).addClass("btn-defaul");//se le da el color por defecto con una clase nueva
+    /* Funciones para disminuir del stock en tiempo real*/
+    e.preventDefault();
+
+    // 1. Obtener el ID del producto desde el botón presionado
+    var idProducto = $(this).data("id");
+
+    // 2. Localizar el input de cantidad y el contenedor del stock de esta fila
+    var inputCantidad = $("#" + idProducto + ".cantidad-vender");
+    var spanStock = $("#stock-" + idProducto);
+
+    // 3. Convertir los valores a números enteros
+    var cantidadAVender = cantidad_ingresada_venta; //parseInt(inputCantidad.val());
+    var stockActual = parseInt(spanStock.text());
+
+    // --- Validaciones básicas ---
+    if (!validarStockVenta(stockActual, cantidadAVender)) {
+      return; // DETIENE TODA LA EJECUCIÓN AQUÍ si la función devolvió false
+    }
+    // 4. Calcular el nuevo stock restante
+    var nuevoStock = stockActual - cantidadAVender;
+
+    // 5. Actualizar visualmente el stock en la pantalla
+    spanStock.text(nuevoStock);
+
+    // 6. Opcional: Cambiar el color del botón si el stock baja de 11
+    if (nuevoStock <= 10) {
+      spanStock.removeClass("btn-success").addClass("btn-danger");
+    } else {
+      spanStock.removeClass("btn-danger").addClass("btn-success");
+    }
+
+
     generarTablaDetalleVenta(id, cantidad_ingresada_venta)
 
+
   });
+
+  function validarStockVenta(stock, cantidad) {
+    // Asegurar que los valores sean tratados como números enteros
+    var stockNum = parseInt(stock);
+    var cantidadNum = parseInt(cantidad);
+
+    // 1. Validar que la cantidad ingresada sea un número válido y mayor a cero
+    if (isNaN(cantidadNum) || cantidadNum <= 0) {
+      alert("Por favor, ingrese una cantidad válida mayor a 0.");
+      return false; // Retorna false para indicar que la validación falló
+    }
+
+    // 2. Validar si la cantidad supera al stock disponible
+    if (cantidadNum > stockNum) {
+      //alert("¡Error! No hay suficiente stock disponible.\nStock actual: " + stockNum + "\nCantidad solicitada: " + cantidadNum);
+      swal({
+        title: "La cantidad supera el Stock",
+        text: "¡Error! No hay suficiente stock disponible.\nStock actual: " + stockNum + "\nCantidad solicitada: " + cantidadNum,
+        type: "error",
+        confirmButtonText: "¡Cerrar!"
+      });
+      return false; // Retorna false y detiene el flujo
+    }
+
+    // Si pasa todas las reglas, la validación es exitosa
+    return true;
+  }
 
   async function generarTablaDetalleVenta(id, cantidaIngresada) {
     try {
@@ -391,7 +430,7 @@ date_default_timezone_set('America/La_Paz');
 
 
 
-                '<td> <input type="number" id="txtcantidad' + id + '" oninput="calculosubtotal(this.value,' + id + ',' + precio_venta + ',' + stockTotal + ')" name="nuevaCantidadProducto" min="1" value="' + cantidad_ingresada + '"  class="nuevaCantidadProducto" idcompraprod="nuevaCantidadProducto"> </td> ' +
+                '<td> <input type="number" id="txtcantidad' + id + '" oninput="calculosubtotal(this.value,' + id + ',' + precio_venta + ',' + stockTotal + ')" name="nuevaCantidadProducto" min="1" value="' + cantidad_ingresada + '"  class="nuevaCantidadProducto" idcompraprod="nuevaCantidadProducto" readonly> </td> ' +
 
                 '<td> <input type="text" class="nuevoPrecio" name="preciovendido" id="precVenta' + id + '" oninput="sumarTotalPrecio()" precioReal="' + precio_venta + '" value="' + precio_venta + '" > </td>' +
 
@@ -430,10 +469,31 @@ date_default_timezone_set('America/La_Paz');
   var idQuitarProducto = [];
   localStorage.removeItem("quitarProducto"); /*ELIMINA DEL LOCALSTORAGE LOS ID AL CARGAR LA PAGINA*/
   $(".formularioVenta").on("click", "button.quitarProducto", function() {
+    
+  let idcompraprod1 = $(this).attr("idcompraprod");
+/* FUNCIONES para devolver la cantidad al stock en la lista de productos para la venta */ 
+    var idtextcantidadprodVenta = "txtcantidad" + idcompraprod1;
+    var cantidadAVender = $("#" + idtextcantidadprodVenta + "").val();
+    console.log('cantidadAVender',cantidadAVender)
+    
+    var spanStock = $("#stock-" + idcompraprod1);
+    var stockActual = parseInt(spanStock.text());
+    var nuevoStock = stockActual + parseInt(cantidadAVender);
+    // Actualizar visualmente el stock en la pantalla
+    spanStock.text(nuevoStock);
+    //Opcional: Cambiar el color del botón si el stock baja de 11
+    if (nuevoStock <= 10) {
+      spanStock.removeClass("btn-success").addClass("btn-danger");
+    } else {
+      spanStock.removeClass("btn-danger").addClass("btn-success");
+    }
+    /// END FUNCIONES
+   
     //console.log("boton");
     $(this).parent().parent().remove(); // se elimnina el registro del la tabla producto
     let idcompraprod = $(this).attr("idcompraprod"); //obtnemos el idProducto de la clase quitarproducto boton eliinar
 
+ 
     let precOfiProd = $(this).attr("precioOficialProd") /*obtenemos el precio del producto*/
     let precOfiFactProd = $(this).attr("precioOficialFactProd") /*obtenemos el precio facturado del producto*/
     //console.log(idcompraprod);
@@ -476,6 +536,8 @@ date_default_timezone_set('America/La_Paz');
       //y si hay registro en la tabla producto entonces va llamar a la funcion para calcular el total de ventas
       sumarTotalPrecio();
     }
+
+     
 
   });
   /*=====  End of quitar producto y recuperar el boton  ======*/
@@ -596,17 +658,17 @@ date_default_timezone_set('America/La_Paz');
      console.log(preciovendido.value);
    };
    }*/
-   $(document).ready(function() {
-  
-  $("#checkVentCred").on("change", function() {
-    $("#cuotaCompra").val(0);
-    if ($(this).is(":checked")) {
+  $(document).ready(function() {
+
+    $("#checkVentCred").on("change", function() {
+      $("#cuotaCompra").val(0);
+      if ($(this).is(":checked")) {
         $(".contenedor-cuota").fadeIn(); // Aparece suavemente
-    } else {
+      } else {
         $(".contenedor-cuota").fadeOut(); // Desaparece suavemente
-    }
-});
- });
+      }
+    });
+  });
 
   /*=============================FUNCION QUE GUARDA LA VENTA=================================*/
   $(document).ready(function() {
@@ -845,8 +907,7 @@ date_default_timezone_set('America/La_Paz');
         var precioUnitarioDeProd = (subtotalFloat) / (cantidadEntero).toFixed(2);
         //var precioUnitarioDeProd = parseFloat((subtotalFloat) / (cantidadEntero));
         //if (precioUnitarioDeProd >= precioRealVentaProdFloat) 
-          if (true) 
-        {
+        if (true) {
 
         } else {
           return idprodventa; /*devolvemos el id del producto que se esta vendiendo a menor precio*/
